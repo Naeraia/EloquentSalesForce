@@ -110,8 +110,8 @@ class SOQLBuilder extends Builder
 
 	/**
 	 * {@inheritDoc}
-	 */
-	public function paginate($perPage = null, $columns = ['*'], $pageName = 'page', $page = null)
+     */
+	public function paginate($perPage = null, $columns = ['*'], $pageName = 'page', $page = null, $total = null)
 	{
 		$columns = $this->getSalesForceColumns($columns);
 
@@ -123,7 +123,7 @@ class SOQLBuilder extends Builder
 			['columns', 'orders', 'limit', 'offset']
 		);
 		$builder->aggregate = ['function' => 'count', 'columns' => ['Id']];
-		$total = $builder->get()[0]['aggregate'];
+		$total = value($total) ?? $builder->get()[0]['aggregate'];
 		if ($total > 2000) { // SOQL OFFSET limit is 2000
 			$total = 2000;
 		}
